@@ -35,16 +35,15 @@ para que el sistema operativo capture tu teclado.
 Veras el indicador "> " en la pantalla. Escribe cualquiera de los 
 siguientes comandos en minusculas y presiona ENTER para ejecutarlo:
 
-   b     -> Cambia el fondo de la pantalla a AZUL.
-   r      -> Cambia el fondo de la pantalla a ROJO.
-   g    -> Cambia el fondo de la pantalla a VERDE.
-   d     -> Vuelve la pantalla al fondo NEGRO clasico.
+   blue     -> Cambia el fondo de la pantalla a AZUL.
+   red      -> Cambia el fondo de la pantalla a ROJO.
+   green    -> Cambia el fondo de la pantalla a VERDE.
+   dark     -> Vuelve la pantalla al fondo NEGRO clasico.
    clear    -> Borra todo el texto y limpia la pantalla.
    shutdown -> Apaga la computadora virtual por completo.
 
 * Nota: El sistema detecta la tecla "Backspace" para borrar letras. 
   Si escribes un comando desconocido, el sistema mostrara "Err".
-* Extra: Asegurate que vortexos este en el escritorio
 
 ======================================================================
                   Gracias por leer <3                   
