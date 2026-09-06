@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>VortexOS Web v5.0</title>
+    <style>
+        * { box-sizing: border-box; }
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            background-color: #000;
+            font-family: 'Courier New', Courier, monospace;
+            overflow: hidden;
+        }
+        #screen {
+            width: 100%; height: 100%;
+            background-color: #0000aa; /* Azul institucional retro */
+            color: #ffffff;
+            padding: 20px;
+            font-size: 18px;
+            line-height: 1.4;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+        .matrix-mode {
+            background-color: #000000 !important;
+            color: #00ff00 !important;
+        }
+        #input-line {
+            display: flex;
+            align-items: center;
+        }
+        #prompt { margin-right: 10px; }
+        #console-input {
+            background: transparent;
+            border: none;
+            color: inherit;
+            font-family: inherit;
+            font-size: inherit;
+            outline: none;
+            flex-grow: 1;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+
+<div id="screen">
+    <div id="history">--- VORTEXOS v5.0 ONLINE ---
+Escribe 'help' para ver los comandos disponibles.
+
+</div>
+    <div id="input-line">
+        <span id="prompt">&gt;</span>
+        <input type="text" id="console-input" autofocus autocomplete="off" spellcheck="false">
+    </div>
+</div>
+
+<script>
+    const screen = document.getElementById('screen');
+    const history = document.getElementById('history');
+    const input = document.getElementById('console-input');
+    
+    let matrixInterval = null;
+    let isMatrixActive = false;
+
+    // Mantener el foco en el input siempre
+    document.addEventListener('click', () => input.focus());
+
+    input.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            const rawValue = input.value;
+            const cmd = rawValue.trim().toLowerCase();
+            
+            // Si el modo Matrix está activo, cualquier tecla o Enter nos saca de ahí
+            if (isMatrixActive) {
+                stopMatrix();
+                input.value = '';
+                return;
+            }
+
+            // Mostrar el comando escrito en el historial
+            history.innerHTML += `&gt; ${rawValue}\n`;
+            input.value = '';
+
+            if (cmd === '') return;
+
+            // --- RUTEADOR DE COMANDOS WEB ---
+            switch(cmd) {
+                case 'help':
+                    history.innerHTML += "cmds disponibles: help, cls, inf, mat, dly, rbt, off\n\n";
+                    break;
+                case 'cls':
+                    history.innerHTML = '';
+                    break;
+                case 'inf':
+                    history.innerHTML += "VortexOS Web - Sin limites de memoria de hardware.\n\n";
+                    break;
+                case 'off':
+                    history.innerHTML += "Cerrando sesion del sistema...\n";
+                    setTimeout(() => window.close(), 1000);
+                    break;
+                case 'rbt':
+                    history.innerHTML += "Reiniciando el sistema virtual...\n";
+                    setTimeout(() => location.reload(), 800);
+                    break;
+                case 'dly':
+                    history.innerHTML += "Congelando sistema por 3 segundos...\n";
+                    input.disabled = true;
+                    setTimeout(() => {
+                        input.disabled = false;
+                        input.focus();
+                        history.innerHTML += "Sistema reactivado.\n\n";
+                        scrollDown();
+                    }, 3000);
+                    break;
+                case 'mat':
+                    startMatrix();
+                    break;
+                default:
+                    // Escritura libre: no hace nada, no muestra error, solo avanza limpiamente
+                    break;
+            }
+            scrollDown();
+        }
+    });
+
+    function scrollDown() {
+        screen.scrollTop = screen.scrollHeight;
+    }
+
+    function startMatrix() {
+        isMatrixActive = true;
+        screen.classList.add('matrix-mode');
+        history.innerHTML = "--- MODO MATRIX ACTIVO --- (Presiona ENTER para salir)\n\n";
+        document.getElementById('prompt').style.display = 'none';
+        
+        matrixInterval = setInterval(() => {
+            let line = '';
+            for (let i = 0; i < 15; i++) {
+                line += Math.floor(Math.random() * 10) + ' ';
+            }
+            history.innerHTML += line + '\n';
+            scrollDown();
+        }, 80);
+    }
+
+    function stopMatrix() {
+        isMatrixActive = false;
+        clearInterval(matrixInterval);
+        screen.classList.remove('matrix-mode');
+        document.getElementById('prompt').style.display = 'inline';
+        history.innerHTML = "--- VORTEXOS v5.0 ONLINE ---\n\n";
+        scrollDown();
+    }
+</script>
+</body>
+</html>
